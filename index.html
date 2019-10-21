@@ -1,0 +1,228 @@
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="./node_modules/bxslider/dist/jquery.bxslider.min.css">
+
+
+    <link rel="stylesheet" href="./node_modules/pickadate/lib/compressed/themes/default.css">
+    <link rel="stylesheet" href="./node_modules/pickadate/lib/compressed/themes/default.date.css">
+
+    <link href='./node_modules/@fullcalendar/core/main.css' rel='stylesheet' />
+    <link href='./node_modules/@fullcalendar/daygrid/main.css' rel='stylesheet' />
+
+    <link href="./node_modules/cropper/dist/cropper.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="./node_modules/tooltipster/dist/css/tooltipster.bundle.min.css" />
+
+    <link rel="stylesheet" href="./node_modules/swiper/css/swiper.min.css">
+
+
+
+</head>
+
+<body>
+
+
+
+
+    <div class="slider">
+        <div>I am a slide.</div>
+        <div>I am another slide.</div>
+    </div>
+
+
+
+
+    <div>
+        <input type="text" class="datepicker">
+    </div>
+
+    <div id='calendar'></div>
+
+
+    <div>
+        <img id="image" src="https://picsum.photos/200/300">
+    </div>
+
+
+
+
+    // Putting a tooltip on an image:
+    <img src="https://picsum.photos/500/300" class="tooltip" title="Giflons Léni!" />
+
+    // Putting a tooltip on some text (span, div or whatever):
+    <span class="tooltip" title="Giflons Léni!">Some text</span>
+
+
+
+
+
+    <div class="swiper-container">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            <div class="swiper-slide">Slide 1</div>
+            <div class="swiper-slide">Slide 2</div>
+            <div class="swiper-slide">Slide 3</div>
+            ...
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- If we need scrollbar -->
+        <div class="swiper-scrollbar"></div>
+    </div>
+
+
+
+
+    <div id="the-basics">
+        <input class="typeahead" type="text" placeholder="States of USA">
+    </div>
+
+
+    <script src="./node_modules/jquery/dist/jquery.js"></script>
+
+    <script src="./node_modules/bxslider/dist/jquery.bxslider.min.js"></script>
+
+    <script src="./node_modules/pickadate/lib/compressed/picker.js"></script>
+    <script src="./node_modules/pickadate/lib/compressed/picker.date.js"></script>
+
+    <script src='./node_modules/@fullcalendar/core/main.js'></script>
+    <script src='./node_modules/@fullcalendar/daygrid/main.js'></script>
+
+    <script src="./node_modules/cropper/dist/cropper.js"></script>
+
+    <script type="text/javascript" src="./node_modules/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+
+    <script src="./node_modules/swiper/js/swiper.min.js"></script>
+
+    <script src="./node_modules/typeahead.js/dist/typeahead.jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('.slider').bxSlider();
+
+            $('.tooltip').tooltipster({
+                animation: 'fade',
+                delay: 200,
+                theme: 'tooltipster-punk',
+                trigger: 'click',
+                contentCloning: true
+            });
+            $('.tooltip').tooltipster();
+
+
+            $('.datepicker').pickadate();
+
+            var $image = $('#image');
+
+            $image.cropper({
+                maxWidth: "100%",
+                aspectRatio: 16 / 9,
+                crop: function (event) {
+                    console.log(event.detail.x);
+                    console.log(event.detail.y);
+                    console.log(event.detail.width);
+                    console.log(event.detail.height);
+                    console.log(event.detail.rotate);
+                    console.log(event.detail.scaleX);
+                    console.log(event.detail.scaleY);
+                }
+
+
+            });
+
+            // Get the Cropper.js instance after initialized
+            var cropper = $image.data('cropper');
+
+
+            var substringMatcher = function (strs) {
+                return function findMatches(q, cb) {
+                    var matches, substringRegex;
+
+                    // an array that will be populated with substring matches
+                    matches = [];
+
+                    // regex used to determine if a string contains the substring `q`
+                    substrRegex = new RegExp(q, 'i');
+
+                    // iterate through the pool of strings and for any string that
+                    // contains the substring `q`, add it to the `matches` array
+                    $.each(strs, function (i, str) {
+                        if (substrRegex.test(str)) {
+                            matches.push(str);
+                        }
+                    });
+
+                    cb(matches);
+                };
+            };
+
+            var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+                'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
+                'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+                'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+                'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+                'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+                'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+                'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+                'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+            ];
+
+            $('#the-basics .typeahead').typeahead({
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+                {
+                    name: 'states',
+                    source: substringMatcher(states)
+                });
+
+        });
+
+        var mySwiper = new Swiper('.swiper-container', {
+            // Optional parameters
+            direction: 'vertical',
+            loop: true,
+
+            // If we need pagination
+            pagination: {
+                el: '.swiper-pagination',
+            },
+
+            // Navigation arrows
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            // And if we need scrollbar
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            },
+        })
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: ['dayGrid'] // an array of strings!
+            });
+
+            calendar.render();
+        });
+
+
+    </script>
+</body>
+
+</html>
